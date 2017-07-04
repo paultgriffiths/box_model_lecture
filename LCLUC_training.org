@@ -1,0 +1,76 @@
+#+TITLE:    Atmospheric chemistry with a focus on ozone and hands-on modeling
+#+AUTHOR:    Paul Griffiths, NCAS-Climate
+#+EMAIL:     ptg21@cam.ac.uk
+#+DATE:      LCLUC Workshop, July 2017
+#+DESCRIPTION:
+#+KEYWORDS:
+#+LANGUAGE:  en
+#+latex_header: \mode<beamer>{\usetheme{Singapore}}
+#+LaTeX_CLASS_OPTIONS: [ignorenonframetext,presentation,smallest]
+#+startup: beamer
+#+LaTeX_CLASS: beamer
+#+OPTIONS: H:2
+
+#+BEAMER_HEADER: \usefonttheme{professionalfonts}
+#+LaTeX_CLASS_OPTIONS: [garamond]
+#+BEAMER_THEME: boxes
+#+LaTeX_HEADER: \setbeamertemplate{navigation symbols}{}
+#+Latex_header: \setbeamertemplate{navigation symbols}{}
+#+BEAMER_COLOR_THEME: beaver
+#+OPTIONS: toc:t
+
+* something section
+
+** Model development timeline
+file:////Users/ptg21/ownCloud/documents/presentations_posters/160210_RGCH_workshop/figures/Hadley_timeline.png
+
+*** something else item
++ something bullet
+** something new
+
+*** HADCM3
+
+- 19 vertical levels
+- N48 grid (3.75^o \times 2.5^o) so relatively coarse by modern GCM
+  standards - 250 km approx. at the equator, c.f. N96 (150 km) or N216
+  (60 km) grids.
+- Introduces need for downscaling, which introduces uncertainty.
+- Nevertheless, some eye-catching early studies of including vegetation in GCM
+- Has a distinctive drying over Amazonia, e.g. Cox et al., 2000.
+    :PROPERTIES:
+    :BEAMER_col: 0.65
+    :END:
+
+*** FIRES
+    :PROPERTIES:
+    :BEAMER_col: 0.35
+    :END:
+#+Attr_LaTeX: :scale 50%
+#+CAPTION: Fire risks in 2080 in HadCM3
+
+[[file:////Users/ptg21/ownCloud/documents/presentations_posters/160210_RGCH_workshop/figures/HadCM3_fire_amazonia.pdf]]
+
+** HadGEM2-ES - used for IPCC Fourth Assessment (2013)
+
+*** THE BUGGER
+  :PROPERTIES:
+    :BEAMER_col: 0.55
+    :END:
+- N96L38 so improved spatial resolution
+- Well-resolved stratosphere, tropospheric chemistry
+- Wetland methane emissions
+- Interactive methane in radiation scheme
+- HadGEM2-ES projects minimal change in Amazon forest extent, dry
+   season does not get longer in future climate
+
+[Good et al., 2011]
+*** THE PROOF
+  :PROPERTIES:
+    :BEAMER_col: 0.45
+    :END:
+#+Attr_LaTeX: :scale 50%
+#+CAPTION: update
+file:///Users/ptg21/Dropbox/projects/RGCH/160210_RGCH_workshop/figures/HadCM3vsGEM2.pdf
+
+
+
