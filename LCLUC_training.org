@@ -1,76 +1,191 @@
 #+TITLE:    Atmospheric chemistry with a focus on ozone and hands-on modeling
-#+AUTHOR:    Paul Griffiths, NCAS-Climate
-#+EMAIL:     ptg21@cam.ac.uk
-#+DATE:      LCLUC Workshop, July 2017
-#+DESCRIPTION:
-#+KEYWORDS:
-#+LANGUAGE:  en
-#+latex_header: \mode<beamer>{\usetheme{Singapore}}
-#+LaTeX_CLASS_OPTIONS: [ignorenonframetext,presentation,smallest]
-#+startup: beamer
-#+LaTeX_CLASS: beamer
-#+OPTIONS: H:2
+#+AUTHOR:   \href{mailto:ptg21@cam.ac.uk}Paul Griffiths, NCAS-Climate & Visiting Scientist, NARIT}
+#+AUTHOR:    \href{mailto:email@example.com}{John Doe}
+#+DATE:     LCLUC Workshop, July 2017
+#+EMAIL: (concat "ptg21" at-sign "cam.ac.uk")
+#+BEAMER_HEADER: \subtitle{Ozone and models}
 
+#+BEAMER_HEADER: \institute[NCAS]{National Centre for Atmospheric Science \\\url{http://www.ncas.ac.uk}}
+
+#+DESCRIPTION: Notes prepared for the 2017 LCLUC Training, Chiang Mai.  See http://lcluc.umd.edu/meetings/lcluc-sari-international-regional-science-meeting-southsoutheast-asia
+
+#+KEYWORDS: Training Atmospheric Chemistry Ozone Box modeling
+#+LANGUAGE:  en
+#+startup: beamer
+#+OPTIONS: H:2
 #+BEAMER_HEADER: \usefonttheme{professionalfonts}
-#+LaTeX_CLASS_OPTIONS: [garamond]
-#+BEAMER_THEME: boxes
-#+LaTeX_HEADER: \setbeamertemplate{navigation symbols}{}
-#+Latex_header: \setbeamertemplate{navigation symbols}{}
+#+INFOJS_OPT: view:t toc:t ltoc:t mouse:underline buttons:1 path:http://orgmode.org/org-info.js
+#+MACRO: BEAMERMODE presentation
+#+LaTeX_HEADER:  \setbeamertemplate{navigation symbols}{}
+#+LaTeX_CLASS_OPTIONS: [ignorenonframetext,presentation,smallest]
+
+
+# #+BEAMER_THEME: Singapore
 #+BEAMER_COLOR_THEME: beaver
 #+OPTIONS: toc:t
+#+LATEX_HEADER: \definecolor{mylinkcolor}{HTML}{006DAF}
+#+LATEX_HEADER: \hypersetup{colorlinks=true, linkcolor=mylinkcolor, urlcolor=mylinkcolor}
+* General comments on atmospheric pollution
 
-* something section
+** Air pollution is a global problem
+#+CAPTION: loss of visibility
+[[file:figures/polluted_cities.png]]
+#+COMMENT: image downloaded from https://ral.ucar.edu/sites/default/files/public/images/features/cities.png on 20170707
 
-** Model development timeline
-file:////Users/ptg21/ownCloud/documents/presentations_posters/160210_RGCH_workshop/figures/Hadley_timeline.png
 
-*** something else item
-+ something bullet
-** something new
+** Biogenic emissions are also important
+#+CAPTION:  'Trees cause more pollution than automobiles do' - Ronald Reagan, 1981
+#+NAME: dickie_ridge
+[[file:figures/dickie_ridge.png]]
 
-*** HADCM3
+** COMMENT Regional Haze - Dickey Ridge (split image) looking southwest across the Browntown area into the Shenandoah Valley. Good visibility on the left and poor visibility on the right.  File downloaded from https://www.nps.gov/ner/photosmultimedia/photogallery.htm?id=21C21642-155D-451F-67E688AC226602D3 on 20170707
 
-- 19 vertical levels
-- N48 grid (3.75^o \times 2.5^o) so relatively coarse by modern GCM
-  standards - 250 km approx. at the equator, c.f. N96 (150 km) or N216
-  (60 km) grids.
-- Introduces need for downscaling, which introduces uncertainty.
-- Nevertheless, some eye-catching early studies of including vegetation in GCM
-- Has a distinctive drying over Amazonia, e.g. Cox et al., 2000.
+
+
+
+  
+** Primary and secondary pollutants
+*Primary* Emitted directly into the atmosphere (usually at the surface)
+ - Nitric oxide, NO
+ - Volatile organic compounds such as methane, CO
+     + Biogenic VOCs suc as isoprene, terpenes, formaldehyde (HCHO)
+	 + Anthropogenic VOCs such as benzene, gasoline
+ - Primary aerosol such as soot
+ - SO_2
+*Secondary* Made in the atmosphere by [[oxidation][oxidation]]
+ - Ozone, O_3
+ - NO_2
+ - Formaldehyde (HCHO)
+
+* Quantitative treatment of chemical processes
+** Emission and loss - Timescales in atmospheric chemistry
+Considering the atmosphere as a whole, or some air-mass within in it, we could
+write an equation describing the rate of change ('tendency') of a species.
+
+Prognostic equation for species X, with concentration $x$
+
+\vspace{-0.1in} 
+\begin{eqnarray*}
+\frac{dx}{dt} &=& R -k x
+\end{eqnarray*}
+
+where R is the rate of emission of X and k is a constant
+
+We now have a first-order linear differential equation, which can be
+solved to give
+
+\vspace{-0.1in} 
+\begin{eqnarray*}
+x(t) &=& \frac{R}{k_1}\big(1-\exp (-k_1 t)\big)
+\end{eqnarray*}
+
+System has a characteristic time, $\tau = 1/k$
+** Time dependence of X
+#+CAPTION:  Time dependence of concentration of chemical species X 
+#+NAME: steady_stage
+[[file:figures/ss.png]]
+
+
+** The rate law
+*** Basic points
++ Rate is defined as change in concentration per unit time
++ Natural unit of concentration in air quality modelling: 
+  * concentration: *molecules per cm^3 gas* so units are cm$^{-3}$
+  * rate: cm$^{-3}$ s$^{-1}$
++ [[https://en.wikipedia.org/wiki/Law_of_mass_action][Law of Mass Action]] - Double the concentration = Double the rate 
+
+*** NO + O_3 = NO_2 + O_2
++ The rate of change of NO can be expressed as 
+\vspace{-0.1in} 
+\begin{eqnarray*}
+\frac{d [NO]}{dt} &=& -k_1[NO][O_3]
+\end{eqnarray*}
+
++ Similarly, $\frac{d[NO_2]}{dt} = k_1[NO][O_3]$
+
+# *** OH + NO_2 = HNO_3
+# \vspace{-0.1in} 
+# \begin{eqnarray*}
+# \frac{d [\mathrm{HNO_3}]}{dt} &=& k_2[NO_2][OH]
+# \end{eqnarray*}
+
+
+* Emissions and deposition
+** Emission of primary pollutants
+*** Emissions into a boundary layer - dimensional analysis
++ Emissions per unit surface area: 
+ + $E$ with units of molecules cm$^{-2}$ s$^{-1}$
++ Into a well-mixed layer of height $h$ (cm)
+*** Rate equation
++ A rate of change of $E/h$
+\vspace{-0.1in} 
+\begin{eqnarray*}
+\frac{d[NO]}{dt} &=& E_{NO}/h
+\end{eqnarray*}
+
+** Dry deposition at the surface
++ Flux depends on concentration in gas phase above surface and on the
+  reactivity of the surface
++ Flux has units of (molecules) per unit of surface area per unit time (cm$^{-2}$ s$^{-1}$)
+\vspace{-0.1in} 
+\begin{eqnarray*}
+\mathrm{Flux} &\propto& C[O_3]
+\end{eqnarray*}
++ Units of C are therefore cm s$^{-1}$, a 'velocity', $v$, dependent on surface type
+\vspace{-0.1in} 
+\begin{eqnarray*}
+\frac{d[O_3]}{dt} &=& - \frac{v}{h}[O_3] = - k_1 [O_3]
+\end{eqnarray*}
+
+*** column one
     :PROPERTIES:
     :BEAMER_col: 0.65
     :END:
 
-*** FIRES
+*** column two
     :PROPERTIES:
     :BEAMER_col: 0.35
     :END:
 #+Attr_LaTeX: :scale 50%
-#+CAPTION: Fire risks in 2080 in HadCM3
-
-[[file:////Users/ptg21/ownCloud/documents/presentations_posters/160210_RGCH_workshop/figures/HadCM3_fire_amazonia.pdf]]
-
-** HadGEM2-ES - used for IPCC Fourth Assessment (2013)
-
-*** THE BUGGER
-  :PROPERTIES:
-    :BEAMER_col: 0.55
-    :END:
-- N96L38 so improved spatial resolution
-- Well-resolved stratosphere, tropospheric chemistry
-- Wetland methane emissions
-- Interactive methane in radiation scheme
-- HadGEM2-ES projects minimal change in Amazon forest extent, dry
-   season does not get longer in future climate
-
-[Good et al., 2011]
-*** THE PROOF
-  :PROPERTIES:
-    :BEAMER_col: 0.45
-    :END:
-#+Attr_LaTeX: :scale 50%
-#+CAPTION: update
-file:///Users/ptg21/Dropbox/projects/RGCH/160210_RGCH_workshop/figures/HadCM3vsGEM2.pdf
+#+CAPTION: caption
 
 
+** Photochemistry <<oxidation>>
++ Molecules absorb photons and the chemical bonds are broken - /photolysis/
++ Rate of [[https://en.wikipedia.org/wiki/Photodissociation][photolysis]]
+  depends on number of photons of the correct wavelength.
+\vspace{-0.1in}
+\begin{eqnarray*}
+\frac{d[NO_2]}{dt} &=& - J [NO_2]
+\end{eqnarray*}
+
+J depends on molecule and flux of photons (hence: time of day, lat, lon, cloud cover)
+
+** Example: NO2
+#+CAPTION: absorption cross-section of NO_2
+[[file:figures/NO2_abs.png]]
+#+CAPTION: absorption cross-section of NO_2
+
+
+** Example: NO2
+#+CAPTION: as before showing region of significant UV/VIS solar flux
+[[file:figures/NO2_abs2.png]]
+
+
+* Lecture 2
+* Formation of OH
+* Peroxy radicals formed from OH
+* Peroxy radicals form NO2
+* NO2 forms ozone
++ Ozone is broken into reactive oxygen (O^1D)
++ The reactive oxygen reacts with water: O^{1}D + H_{2}O = 2 OH
+
+
+* Useful links
+
+http://acmg.seas.harvard.edu/education.html
+
+particularly 
+
+http://acmg.seas.harvard.edu/education.html#mmac
 
