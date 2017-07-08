@@ -4,27 +4,26 @@
 #+DATE:     LCLUC Workshop, July 2017
 #+EMAIL: (concat "ptg21" at-sign "cam.ac.uk")
 #+BEAMER_HEADER: \subtitle{Ozone and models}
-
 #+BEAMER_HEADER: \institute[NCAS]{National Centre for Atmospheric Science \\\url{http://www.ncas.ac.uk}}
-
 #+DESCRIPTION: Notes prepared for the 2017 LCLUC Training, Chiang Mai.  See http://lcluc.umd.edu/meetings/lcluc-sari-international-regional-science-meeting-southsoutheast-asia
-
 #+KEYWORDS: Training Atmospheric Chemistry Ozone Box modeling
+
 #+LANGUAGE:  en
 #+startup: beamer
-#+OPTIONS: H:2
+#+MACRO: BEAMERMODE presentation
+#+OPTIONS: H:2 toc:t
 #+BEAMER_HEADER: \usefonttheme{professionalfonts}
 #+INFOJS_OPT: view:t toc:t ltoc:t mouse:underline buttons:1 path:http://orgmode.org/org-info.js
-#+MACRO: BEAMERMODE presentation
 #+LaTeX_HEADER:  \setbeamertemplate{navigation symbols}{}
 #+LaTeX_CLASS_OPTIONS: [ignorenonframetext,presentation,smallest]
-
-
-# #+BEAMER_THEME: Singapore
 #+BEAMER_COLOR_THEME: beaver
-#+OPTIONS: toc:t
 #+LATEX_HEADER: \definecolor{mylinkcolor}{HTML}{006DAF}
 #+LATEX_HEADER: \hypersetup{colorlinks=true, linkcolor=mylinkcolor, urlcolor=mylinkcolor}
+* Lecture 1
+** Goals
+*** Introduce concepts of atmospheric chemistry
+*** Run first numerical simulation of a chemical system
+
 * General comments on atmospheric pollution
 
 ** Air pollution is a global problem
@@ -43,7 +42,29 @@
 
 
 
-  
+** Typical levels of atmospheric constituents
+| Pollutant | Concentration | Lifetime / yr | 
+|-----------+---------------+---------------|
+| CH_4      | 1700 ppbv     |            10 |
+| H_2       | 500 ppbv      |             4 |
+| CO        | 40-200 ppbv   |           0.2 |
+| O_3       | 20-120 ppbv   |          0.05 |
+| OH        | 0.1 pptv      |          0.1s |
+
+1 ppbv = 10^{-9}
+
+1 pptv = 10^{-12}
+** US EPA Air Quality Index levels of pollutants  
+| Pollutant |   Low | Moderate |     UFSG | Unhealthy |
+|-----------+-------+----------+----------+-----------|
+| Ozone     |  0-54 |    55-70 |    71-85 |    86-105 |
+| NO2       |  0-53 |   54-100 |  101-360 |   186-304 |
+| CO        | 0-4.4 |  4.5-9.4 | 9.5-12.4 | 12.5-15.4 |
+
+Levels are in ppbv
+
+# Source https://en.wikipedia.org/wiki/Air_quality_index#United_States
+
 ** Primary and secondary pollutants
 *Primary* Emitted directly into the atmosphere (usually at the surface)
  - Nitric oxide, NO
@@ -109,12 +130,11 @@ System has a characteristic time, $\tau = 1/k$
 # \frac{d [\mathrm{HNO_3}]}{dt} &=& k_2[NO_2][OH]
 # \end{eqnarray*}
 
-
 * Emissions and deposition
 ** Emission of primary pollutants
 *** Emissions into a boundary layer - dimensional analysis
 + Emissions per unit surface area: 
- + $E$ with units of molecules cm$^{-2}$ s$^{-1}$
+  + Flux $E$ has units of (molecules) per unit of surface area per unit time (cm^{-2} s^{-1})
 + Into a well-mixed layer of height $h$ (cm)
 *** Rate equation
 + A rate of change of $E/h$
@@ -122,16 +142,16 @@ System has a characteristic time, $\tau = 1/k$
 \begin{eqnarray*}
 \frac{d[NO]}{dt} &=& E_{NO}/h
 \end{eqnarray*}
-
+has the correct dimensions (cm^{-3} s^{-1})
 ** Dry deposition at the surface
 + Flux depends on concentration in gas phase above surface and on the
   reactivity of the surface
-+ Flux has units of (molecules) per unit of surface area per unit time (cm$^{-2}$ s$^{-1}$)
++ Flux has units of (molecules) per unit of surface area per unit time (cm^{-2} s^{-1})
 \vspace{-0.1in} 
 \begin{eqnarray*}
 \mathrm{Flux} &\propto& C[O_3]
 \end{eqnarray*}
-+ Units of C are therefore cm s$^{-1}$, a 'velocity', $v$, dependent on surface type
++ Units of C are therefore cm s^{-1}, a 'velocity', $v$, dependent on surface type
 \vspace{-0.1in} 
 \begin{eqnarray*}
 \frac{d[O_3]}{dt} &=& - \frac{v}{h}[O_3] = - k_1 [O_3]
@@ -149,9 +169,15 @@ System has a characteristic time, $\tau = 1/k$
 #+Attr_LaTeX: :scale 50%
 #+CAPTION: caption
 
-
+* Photochemistry
 ** Photochemistry <<oxidation>>
 + Molecules absorb photons and the chemical bonds are broken - /photolysis/
+\vspace{-0.1in}
+
+\begin{eqnarray*}
+\mathrm{NO}_2 + hv \rightarrow \mathrm{NO} + \mathrm{O}
+\end{eqnarray*}
+
 + Rate of [[https://en.wikipedia.org/wiki/Photodissociation][photolysis]]
   depends on number of photons of the correct wavelength.
 \vspace{-0.1in}
@@ -159,27 +185,85 @@ System has a characteristic time, $\tau = 1/k$
 \frac{d[NO_2]}{dt} &=& - J [NO_2]
 \end{eqnarray*}
 
-J depends on molecule and flux of photons (hence: time of day, lat, lon, cloud cover)
+J depends on molecule and flux of photons (hence: time of day, lat, lon, cloud
+cover).  Units of J are s^{-1}
 
 ** Example: NO2
 #+CAPTION: absorption cross-section of NO_2
 [[file:figures/NO2_abs.png]]
 #+CAPTION: absorption cross-section of NO_2
 
-
 ** Example: NO2
 #+CAPTION: as before showing region of significant UV/VIS solar flux
 [[file:figures/NO2_abs2.png]]
 
+* Putting these together 
+* first example: the NO/NO_2 interconversion by ozone
+** NO_2/NO 'Photostationary state'
+# see http://www.tandfonline.com/doi/pdf/10.1080/00022470.1983.10465566
+Using the reactions already given, 
+
+\vspace{-0.1in}
+
+\begin{eqnarray*}
+\mathrm{NO} + \mathrm{O}_3  & \rightarrow & \mathrm{NO}_2 + \mathrm{O}_2\\
+\mathrm{NO}_2 + hv &\rightarrow& \mathrm{NO} + \mathrm{O}\\
+\mathrm{O}_2 + \mathrm{O} &\rightarrow & \mathrm{O}_3\\
+\end{eqnarray*}
+
+\vspace{-0.15in}
+
+we can write rates of change for each species
+
+\vspace{-0.1in}
+\begin{eqnarray*}
+\frac{d[\mathrm{NO}_2]}{dt}  &=& - J_1 [\mathrm{NO}_2] + k_3\mathrm{[NO]}\mathrm{[O}_3]\\
+\frac{d[\mathrm{NO]}}{dt}   &=&     J_1 [\mathrm{NO}_2] - k_3\mathrm{[NO]} \mathrm{[O}_3] \\
+\frac{d\mathrm{[O]}}{dt}    &=& - k_2 [\mathrm{O}][\mathrm{O}_2] + J_1 [\mathrm{NO}_2] \\
+\frac{d\mathrm{[O}_3]}{dt}  &=&   k_2 [\mathrm{O}][\mathrm{O}_2]  - k_3 \mathrm{[NO]} \mathrm{[O}_3]
+\end{eqnarray*}
+
+A set of coupled differential equations results!
+** How to proceed
++ There exists a wealth of literature on the solution of these stiff
+  (lifetimes of each species vary by many orders of magnitude, resulting in
+  small timesteps).
+
++ In our example, the lifetime of O is very short, set by k_3[O2], while that
+  of NO2 is determined by J and can be much longer.
+
++ Step forward our numerical model...
+
+
+* Practical one 
+** End of lecture 1
+*** Getting started
++ Open RStudio or R
++ Look at \tt kinetics-box-model-pss.R
+in the src folder.
+  + What do equations describe?
+  + What do you expect to happen?
+*** Run the simulation
+#+BEGIN_SRC R
+source('kinetics-box-model-pss.R')
+#+END_SRC 
+
++ Do the results make sense?
+  + If so: get a coffee!
+  + If not: shout out!
+
 
 * Lecture 2
+** Goals of lecture 2
+*** Introduce ozone formation reactions
+*** Run a box model describing ozone formation
+
 * Formation of OH
 * Peroxy radicals formed from OH
 * Peroxy radicals form NO2
 * NO2 forms ozone
 + Ozone is broken into reactive oxygen (O^1D)
 + The reactive oxygen reacts with water: O^{1}D + H_{2}O = 2 OH
-
 
 * Useful links
 
