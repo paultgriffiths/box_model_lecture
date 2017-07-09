@@ -1,19 +1,17 @@
 #+TITLE:    Atmospheric chemistry with a focus on ozone and hands-on modeling
 #+AUTHOR:   \href{mailto:ptg21@cam.ac.uk}Paul Griffiths, NCAS-Climate & Visiting Scientist, NARIT}
-#+AUTHOR:    \href{mailto:email@example.com}{John Doe}
 #+DATE:     LCLUC Workshop, July 2017
 #+EMAIL: (concat "ptg21" at-sign "cam.ac.uk")
 #+BEAMER_HEADER: \subtitle{Ozone and models}
 #+BEAMER_HEADER: \institute[NCAS]{National Centre for Atmospheric Science \\\url{http://www.ncas.ac.uk}}
 #+DESCRIPTION: Notes prepared for the 2017 LCLUC Training, Chiang Mai.  See http://lcluc.umd.edu/meetings/lcluc-sari-international-regional-science-meeting-southsoutheast-asia
 #+KEYWORDS: Training Atmospheric Chemistry Ozone Box modeling
-
 #+LANGUAGE:  en
 #+startup: beamer
 #+MACRO: BEAMERMODE presentation
-#+OPTIONS: H:2 toc:t ':t
+#+OPTIONS: H:2 toc:f ':t ::t |:t ^:{} -:t f:t *:t <:t
 #+BEAMER_HEADER: \usefonttheme{professionalfonts}
-#+INFOJS_OPT: view:t toc:t ltoc:t mouse:underline buttons:1 path:http://orgmode.org/org-info.js
+#+INFOJS_OPT: view:t toc:f ltoc:f mouse:underline buttons:1 path:http://orgmode.org/org-info.js
 #+LaTeX_HEADER:  \setbeamertemplate{navigation symbols}{}
 #+LaTeX_CLASS_OPTIONS: [ignorenonframetext,presentation,smallest]
 #+BEAMER_COLOR_THEME: beaver
@@ -21,8 +19,37 @@
 #+LATEX_HEADER: \hypersetup{colorlinks=true, linkcolor=mylinkcolor, urlcolor=mylinkcolor}
 * Lecture 1
 ** Goals
+
 *** Introduce concepts of atmospheric chemistry
++ Today it's all about ozone
++ Primary/secondary pollutants
++ Emission/deposition
++ Photochemistry
 *** Run first numerical simulation of a chemical system
++ Simple photochemical system
+
+*** Code is available [[https://www.gitlab.com/ptg21/LCLUC_presentation][here]]
+*** You can clone the code using [[https://git-scm.com/][git]] via 
+
+~git clone git@gitlab.com:ptg21/LCLUC_presentation.git~
+
+** Who is this course for?
+*** My goal is to introduce atmospheric chemistry with a focus on tropospheric ozone and other secondary pollutants.
+*** I won't discuss the chemistry in detail but will summarise the relevant reactions.  It gets complex towards the end.
+*** The goal is to use these reactions to study how ozone levels respond to other pollutants.
+*** Our focus is on rates of production of ozone during the day.
+*** For the purpose of this course, *everything* is a pollutant.
+** Tricks of the trade
+*** Mostly think about processes in terms of their characteristic timescales
++ How fast is ozone formed?
++ How fast is transport out of the planetary boundary layer?
++ How does this compare with transport times?
+*** What are the important species?
++ Ozone
++ NO_2
++ Aldehydes
++ Oxidants such as OH, NO_{3}
++ Key species such as O^{1}D
 
 * General comments on atmospheric pollution
 
@@ -197,8 +224,7 @@ cover).  Units of J are s^{-1}
 #+CAPTION: as before showing region of significant UV/VIS solar flux
 [[file:figures/NO2_abs2.png]]
 
-* Putting these together 
-* first example: the NO/NO_2 interconversion by ozone
+* First example: the NO/NO_2 interconversion by ozone
 ** NO_2/NO 'Photostationary state'
 # see http://www.tandfonline.com/doi/pdf/10.1080/00022470.1983.10465566
 Using the reactions already given, 
@@ -224,7 +250,34 @@ we can write rates of change for each species
 \end{eqnarray*}
 
 A set of coupled differential equations results!
-** How to proceed
+** How to proceed - I
+
+What is our mechanism going to do?
+
+*** column one
+    :PROPERTIES:
+    :BEAMER_col: 0.6
+    :END:
++ We can see that NO and ozone make NO2
++ NO2 makes NO and O, and O makes O3
++ so NO2 regenerates the NO and O3
++ This is an active equilibrium - NO and NO2 interconvert, consuming/releasing
+  ozone as they do so.
+
+As we shall see in L2, this equilibrium is crucial.
+
+*** column two
+    :PROPERTIES:
+    :BEAMER_col: 0.35
+    :END:
+
+#+CAPTION: NO:NO2 interconversion and concomitant O3 consumption/production
+[[file:figures/o3_prod_loss_schematic.png]]
+
+** How to proceed - II
++ So we expect our equations to solve to an equilibrium with zero net rate of
+  change
+
 + There exists a wealth of literature on the solution of these stiff
   differential equations 
   (lifetimes of each species vary by many orders of magnitude, resulting in
@@ -233,8 +286,63 @@ A set of coupled differential equations results!
 + In our example, the lifetime of O is very short, set by k_2[O2], while that
   of NO2 is determined by J and can be much longer.
 
-+ Step forward our numerical model...
++ Step forward our numerical ('box') model...
 
+* Box models
+** Box models
+*** column one
+    :PROPERTIES:
+    :BEAMER_col: 0.55
+    :END:
++ Box models represent a single representative area of the atmosphere.
++ Notionally 1cm^3 in volume
++ Can be connected to the ground via emission/deposition.
++ Could also be chosen to represent the free troposphere.
++ Need to supply photolysis rates, emissions
+
+*** column two
+    :PROPERTIES:
+    :BEAMER_col: 0.65
+    :END:
+
+#+CAPTION: Box model (figure (c) Dan Jacob)
+[[file:figures/jacob_bookchap3-1.png]]
+#+COMMENT: image downloaded fromhttp://acmg.seas.harvard.edu/people/faculty/djj/book/bookchap3-1.gif 
+#+Attr_LaTeX: :scale 200%
+** Anatomy of a box model - I
+*** column one
+    :PROPERTIES:
+    :BEAMER_col: 0.55
+    :END:
++ Box models need a chemical mechanism.
++ The literature can supply these, or you can write your own.  
++ You then code up the mechanism as a differential for each species, in terms
+  of other species' concentrations and other inputs.
+*** column two
+    :PROPERTIES:
+    :BEAMER_col: 0.5
+    :END:
+[[file:figures/brain_part.png]]
+
+** Anatomy of a box model - II
+
+*** column one
+    :PROPERTIES:
+    :BEAMER_col: 0.55
+    :END:
++ Implementation in the language of your choice
++ You need an integrator for the differential equations.
++ There are good ones already implemented, so don't write your own!
++ Typically you supply initial conditions, C0, functions for the tendency of
+  each species,$f$, a timestep (dt) and an end point (tend).
+  
+*** column two
+    :PROPERTIES:
+    :BEAMER_col: 0.5
+    :END:
+
+#+CAPTION: Box model (figure (c) Dan Jacob)
+[[file:figures/code_part.png]]
 
 * Practical one 
 ** End of lecture 1
@@ -244,6 +352,10 @@ A set of coupled differential equations results!
 in the src folder.
   + What do equations describe?
   + What do you expect to happen?
+
+*** \color{red} Any Pythonistas in the audience?
+
+** Practical one 
 *** Run the simulation 
 + ~source("kinetics-box-model-pss.R")~
 
@@ -252,7 +364,9 @@ in the src folder.
   + If so: get a coffee!
   + If not: shout out!
 
-* Recap of the first hour
+** 
+*** Coffee break
+
 ** Recap of the first hour
 *** Begun to think about putting together a chemical mechanism
 *** First model looked at the NO / NO_2 / O_3 interconversion reactions
@@ -260,16 +374,189 @@ in the src folder.
  #+NAME: dickie_ridge
  [[file:figures/Rplot_pss.png]]
 * Lecture 2
+* Box models in the literature
+** Box models in recent literature
+*** Box models are great for process-based studies and the box can be as big as you like
+
+*** column one
+    :PROPERTIES:
+    :BEAMER_col: 0.45
+    :END:
+
+#+CAPTION: Box model used to constrain N_{2}O emissions
+file:figures/isotope_box_model.png
+  
+*** column two
+    :PROPERTIES:
+    :BEAMER_col: 0.45
+    :END:
+
+#+CAPTION: Box model used to study impact of fracking
+file:figures/edwards.png
+
+*** Can focus on processes of interest, parameterize other processes (e.g. mixing), build up complexity as required.
+
+* Goals of lecture 2
 ** Goals of lecture 2
 *** Introduce ozone formation reactions
++ Photochemical oxidant, OH, formation
++ Peroxy radicals introduction
 *** Run a box model describing ozone formation
++ Conceptual overview of a box model
++ Implementing air quality into a box model
+
+** Our mechanism
+Our mechanism is rather complex - the CO and NO emissions interact with
+sunlight and water vapour
+
+\begin{eqnarray*}
+\mathrm{NO}_2 + hv        & \rightarrow & \mathrm{NO} + \mathrm{O} \\
+\mathrm{O}_2 + \mathrm{O} & \rightarrow & \mathrm{O}_3 \\
+\mathrm{NO} + \mathrm{O}_3 &\rightarrow & \mathrm{NO}_2 + \mathrm{O}_2 \\
+\mathrm{O}_3 + hv          & \rightarrow & \mathrm{O}_2 + \mathrm{O1D} \\
+\mathrm{O1D} + \mathrm{H}_2\mathrm{O}  & \rightarrow & 2 \mathrm{OH} \\
+\mathrm{O1D} + \mathrm{N}_2 / \mathrm{O}_2  & \rightarrow &  \mathrm{O} + \mathrm{N}_2 / \mathrm{O}_2  \\
+\mathrm{OH} + \color{red} \mathrm{CO} \color{black} + \mathrm{O}_2 & \rightarrow &  \mathrm{HO}_2 + \mathrm{CO}_2 \\
+\color{red} \mathrm{NO} \color{black}  + \mathrm{HO}_2 &\rightarrow & \mathrm{OH} + \mathrm{NO}_2 
+\end{eqnarray*}
+
+Primary species coloured in \color{red} red 
+** Some general points
+*** VOCs such as CO are degraded by reaction with OH
+\vspace{-0.15in}
+\begin{eqnarray*}
+\mathrm{OH} + \mathrm{CO} +\mathrm{O}_2 & \rightarrow &  \mathrm{HO}_2 + \mathrm{CO}_2 
+\end{eqnarray*}
+and HO_2 (a class of 'peroxy') radicals are produced.
+
+*** NO2 is produced *additionally* via reaction of peroxy radicals with NO
+\vspace{-0.15in}
+\begin{eqnarray*}
+\mathrm{NO} + \mathrm{HO}_2 &\rightarrow & \mathrm{OH} + \mathrm{NO}_2 
+\end{eqnarray*}
+
+*** NO2 photolysis leads to O3
+\vspace{-0.15in}
+\begin{eqnarray*}
+\mathrm{NO}_2 + hv & \rightarrow & \mathrm{NO} + \mathrm{O} \\
+\mathrm{O}_2 + \mathrm{O} & \rightarrow & \mathrm{O}_3 
+ \end{eqnarray*}
+
+** Implementation in a box model
+
+As a series of tendencies
+
+#+BEGIN_SRC python
+
+    dNO2 = -J1*NO2   + k3*NO*O3 + k8*HO2*NO - k9*OH*NO2 +
+	        k13*OH*HONO2
+
+    dNO  =  J1*NO2   - k3*O3*NO - k8*HO2*NO 
+
+    dO3  =  k2*O     - k3*NO*O3 - J4*O3
+
+    dO   =  J1*NO2   - k2*O  + k5*O1D*M
+
+    dOH  =  2.k6*O1D*H2O - k7*OH*CO + k8*HO2*NO +
+	        k11*HO2*O3 - k12*OH*O3 - k9*OH*NO2  
+
+    dHO2 =  k7*OH*CO - k8*HO2*NO - k11*HO2*O3 +
+	        k12*OH*O3 - k14*HO2*HO2 
+
+    dCO  = -k7*OH*CO 
+
+    dO1D =  J4*O3    - k5*O1D*M     - k6*O1D*H2O
+
+    dHONO2 = k9*OH*NO2 - k13*OH*HONO2
+#+END_SRC
 
 * Formation of OH
-* Peroxy radicals formed from OH
-* Peroxy radicals form NO2
-* NO2 forms ozone
-+ Ozone is broken into reactive oxygen (O^1D)
-+ The reactive oxygen reacts with water: O^{1}D + H_{2}O = 2 OH
+** Formation of OH from ozone and water vapour
+The photochemical oxidant, OH, is formed from ozone and water vapour.
+
+\vspace{-0.15in}
+\begin{eqnarray*}
+\mathrm{O}_3 + hv & \rightarrow & \mathrm{O}_2 + \mathrm{O1D} \\
+\mathrm{O1D} + \mathrm{H}_2\mathrm{O}  & \rightarrow & 2\color{red} \mathrm{OH} \\
+\mathrm{O1D} + \mathrm{N}_2 / \mathrm{O}_2  & \rightarrow &  \mathrm{O} + \mathrm{N}_2 / \mathrm{O}_2  
+\end{eqnarray*}
+
+*** Via excited state oxygen atoms - the O1D species. 
+
+These are distinct from the ground state oxygen atoms, O, produced by NO2 photolysis.
+
+*** The photochemical oxidant OH is reactive towards VOCs.  This species initiates the photochemical degradation of VOCs and in the presence of NO will produce ozone.
+
+* Reaction of photochemical oxidant, OH, with VOCs to produce ozone
+** Reaction of photochemical oxidant, OH, with VOCs
+ Able to react with CO and with other VOC via the H atoms, and so initiate photo-degradation.
+
+ \vspace{-0.15in}
+ \begin{eqnarray*}
+ \mathrm{OH} + \mathrm{CO} +\mathrm{O}_2 & \rightarrow & \color{red} \mathrm{HO}_2 \color{black} + \mathrm{CO}_2 \\
+ \\
+ \mathrm{OH} + \mathrm{CH}_4  & \rightarrow & \mathrm{H}_2\mathrm{O} + \color{red}  \mathrm{CH}_3\mathrm{O}_2 \\
+ \end{eqnarray*} 
+
+ Once produced, these peroxy radicals oxidize NO to NO2 and ozone is produced.
+
+\vspace{-0.15in}
+\begin{eqnarray*}
+\mathrm{NO} + \mathrm{HO}_2 &\rightarrow & \mathrm{OH} + \mathrm{NO}_2 \\
+\mathrm{NO}_2 + hv & \rightarrow & \mathrm{NO} + \mathrm{O} \\
+\mathrm{O}_2 + \mathrm{O} & \rightarrow & \mathrm{O}_3 
+\end{eqnarray*}
+
+Without the HO_2 the NO reacts with ozone to produce NO2, which recreates the
+ozone.  No net ozone production!!
+* Conclusions
+** Conclusions
+*** If you have an air mass with NO, VOC (here CO) and sunlight you can expect ozone formation.
+
+*** The amount of ozone formed also depends on H_{2}O, number of photons (sunlight).
+
+*** You can calculate the rate at which ozone is being formed.
+
+*** Without these ozone will be destroyed
+
+** Ozone in model world
+#+CAPTION: Zonal mean net ozone production/loss in the model world
+[[file:figures/o3_prod.png]]
+
+* Practical 2
+** Practical 2
++ Open RStudio or R
++ Look at \tt kinetics-box-model-ozone.R
+in the src folder.
+  + What do equations describe?
+  + What do you expect to happen?
+
+*** \color{red} Any Pythonistas in the audience?
+
+** Practical 2 
+*** Run the simulation 
++ ~source("kinetics-box-model-ozone.R")~
+
++ Can you shift the atmosphere from ozone destruction to ozone production?  
++ How?
+* Conclusions/next steps
+** Next steps
+*** Hand coding the tendency functions gets tedious and can be error-prone.
++ Automatic code generation is possible
++ See [[http://people.cs.vt.edu/asandu/Software/Kpp/][KPP]], the /Kinetic
+  Pre-Processor/
++ Generates F77, F90, C, Matlab code which you compile and run (or run within Matlab)
+
++ This has been incorporated into
+  [[https://github.com/barronh/DSMACC][DSMACC]]
+
+This is an excellent model but its usage requires good Shell and compiler skills.
+
+*** It's easy to show that J values are key to the chemistry
+
++Consider using a verifiable radiative transfer model such as [[https://www2.acom.ucar.edu/modeling/tropospheric-ultraviolet-and-visible-tuv-radiation-model][TUV]] (Tropospheric Ultraviolet and Visible TUV model)
+
+
 
 * Useful links
 
@@ -278,4 +565,10 @@ http://acmg.seas.harvard.edu/education.html
 particularly 
 
 http://acmg.seas.harvard.edu/education.html#mmac
+
+
+
+# #+ATTR_BEAMER: :overlay <+->
+# - Item 1
+# - Item 2
 
