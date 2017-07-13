@@ -6,7 +6,6 @@ author:
 - 'NARIT}'
 beamer_color_theme: beaver
 beamer_header: '\usefonttheme{professionalfonts}'
-caption: 'Figure 12: Box model used to study impact of fracking'
 classoption: 'ignorenonframetext,presentation,smallest'
 
 date: 'LCLUC Workshop, July 2017'
@@ -223,59 +222,6 @@ The rate law
 
 -   Similarly, $\frac{d[NO_2]}{dt} = k_1[NO][O_3]$
 
-
-
-
-Emissions and deposition
-========================
-
-Emission of primary pollutants
-------------------------------
-
-- Emissions into a boundary layer - dimensional analysis
-
-    -   Emissions per unit surface area:
-        -   Flux $E$ has units of (molecules) per unit of surface area
-            per unit time (cm^-2^ s^-1^)
-    -   Into a well-mixed layer of height $h$ (cm)
-
--  Rate equation
-
-    -   A rate of change of $E/h$
-
-    \vspace{-0.1in}
-
-    \begin{eqnarray*}
-    \frac{d[NO]}{dt} &=& E_{NO}/h
-    \end{eqnarray*}
-
-    has the correct dimensions (cm^-3^ s^-1^)
-
----
-
-
-Dry deposition at the surface
------------------------------
-
--   Flux depends on concentration in gas phase above surface and on the
-    reactivity of the surface
--   Flux has units of (molecules) per unit of surface area per unit time
-    (cm^-2^ s^-1^)
-
-\vspace{-0.1in}
-
-\begin{eqnarray*}
-\mathrm{Flux} &\propto& C[O_3]
-\end{eqnarray*}
-
--   Units of C are therefore cm s^-1^, a 'velocity', $v$, dependent on
-    surface type
-
-\vspace{-0.1in}
-
-\begin{eqnarray*}
-\frac{d[O_3]}{dt} &=& - \frac{v}{h}[O_3] = - k_1 [O_3]
-\end{eqnarray*}
 
 Photochemistry
 ==============
@@ -503,10 +449,4 @@ Practical one
 
 - Coffee break
 
---- 
-
-
-
-
-
-
+---

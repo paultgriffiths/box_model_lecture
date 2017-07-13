@@ -18,16 +18,19 @@
 #+LATEX_HEADER: \definecolor{mylinkcolor}{HTML}{006DAF}
 #+LATEX_HEADER: \hypersetup{colorlinks=true, linkcolor=mylinkcolor, urlcolor=mylinkcolor}
 * Lecture 1
-** Goals
+** Goals - I
 
 *** Introduce concepts of atmospheric chemistry
 + Today it's all about ozone
 + Primary/secondary pollutants
-+ Emission/deposition
-+ Photochemistry
++ Emission (briefly)
++ Photochemistry (more detail)
++ Box model exercise
+
+** Goals - II 
 *** Run first numerical simulation of a chemical system
 + Simple photochemical system
-
++ Conditions to produce ozone production
 *** Code is available [[https://www.gitlab.com/ptg21/LCLUC_presentation][here]]
 *** You can clone the code using [[https://git-scm.com/][git]] via 
 
@@ -46,7 +49,7 @@
 + How does this compare with transport times?
 *** What are the important species?
 + Ozone
-+ NO_2
++ NO_{2}
 + Aldehydes
 + Oxidants such as OH, NO_{3}
 + Key species such as O^{1}D
@@ -72,10 +75,10 @@
 ** Typical levels of atmospheric constituents
 | Pollutant | Concentration | Lifetime / yr | 
 |-----------+---------------+---------------|
-| CH_4      | 1700 ppbv     |            10 |
-| H_2       | 500 ppbv      |             4 |
+| CH_{4}    | 1700 ppbv     |            10 |
+| H_{2}     | 500 ppbv      |             4 |
 | CO        | 40-200 ppbv   |           0.2 |
-| O_3       | 20-120 ppbv   |          0.05 |
+| O_{3}     | 20-120 ppbv   |          0.05 |
 | OH        | 0.1 pptv      |          0.1s |
 
 1 ppbv = 10^{-9}
@@ -91,6 +94,20 @@
 Levels are in ppbv
 
 # Source https://en.wikipedia.org/wiki/Air_quality_index#United_States
+** Air quality index
+
+\vspace{-0.1in}
+
+\begin{eqnarray*}
+I & = & \frac{(I_{high} - I_{low})}{(C_{high}-C_{low})} (C - C_{low}) + I_{low}
+\end{eqnarray*}
+
+#+Attr_LaTeX: :scale 60%
+[[file:figures/CM_AQI.png]]
+
+
+$I$ and $C$ are the instantaneous index and concentrations, $I_{high}, I_{low}$ are index breakpoints, $C_{high}, C_{low}$ are
+concentration breakpoints.
 
 ** Primary and secondary pollutants
 *Primary* Emitted directly into the atmosphere (usually at the surface)
@@ -98,11 +115,11 @@ Levels are in ppbv
  - Volatile organic compounds such as methane, CO
      + Biogenic VOCs suc as isoprene, terpenes, formaldehyde (HCHO)
 	 + Anthropogenic VOCs such as benzene, gasoline
- - Primary aerosol such as soot
- - SO_2
+ - Primary aerosol such as soot 
+ - SO_{2}
 *Secondary* Made in the atmosphere by [[oxidation][oxidation]]
- - Ozone, O_3
- - NO_2
+ - Ozone, O_{3}
+ - NO_{2}
  - Formaldehyde (HCHO)
 
 * Quantitative treatment of chemical processes
@@ -117,7 +134,7 @@ Prognostic equation for species X, with concentration $x$
 \frac{dx}{dt} &=& R -k x
 \end{eqnarray*}
 
-where R is the rate of emission of X and k is a constant
+where R is the (constant) rate of emission of X and k is a constant
 
 We now have a first-order linear differential equation, which can be
 solved to give
@@ -133,6 +150,7 @@ System has a characteristic time, $\tau = 1/k$
 #+NAME: steady_stage
 [[file:figures/ss.png]]
 
+Time dependence for constant emission rate and first-order loss.
 
 ** The rate law
 *** Basic points
@@ -142,7 +160,7 @@ System has a characteristic time, $\tau = 1/k$
   * rate: cm$^{-3}$ s$^{-1}$
 + [[https://en.wikipedia.org/wiki/Law_of_mass_action][Law of Mass Action]] - Double the concentration = Double the rate 
 
-*** NO + O_3 = NO_2 + O_2
+*** NO + O_{3} = NO_{2} + O_{2}
 + The rate of change of NO can be expressed as 
 \vspace{-0.1in} 
 \begin{eqnarray*}
@@ -157,44 +175,6 @@ System has a characteristic time, $\tau = 1/k$
 # \frac{d [\mathrm{HNO_3}]}{dt} &=& k_2[NO_2][OH]
 # \end{eqnarray*}
 
-* Emissions and deposition
-** Emission of primary pollutants
-*** Emissions into a boundary layer - dimensional analysis
-+ Emissions per unit surface area: 
-  + Flux $E$ has units of (molecules) per unit of surface area per unit time (cm^{-2} s^{-1})
-+ Into a well-mixed layer of height $h$ (cm)
-*** Rate equation
-+ A rate of change of $E/h$
-\vspace{-0.1in} 
-\begin{eqnarray*}
-\frac{d[NO]}{dt} &=& E_{NO}/h
-\end{eqnarray*}
-has the correct dimensions (cm^{-3} s^{-1})
-** Dry deposition at the surface
-+ Flux depends on concentration in gas phase above surface and on the
-  reactivity of the surface
-+ Flux has units of (molecules) per unit of surface area per unit time (cm^{-2} s^{-1})
-\vspace{-0.1in} 
-\begin{eqnarray*}
-\mathrm{Flux} &\propto& C[O_3]
-\end{eqnarray*}
-+ Units of C are therefore cm s^{-1}, a 'velocity', $v$, dependent on surface type
-\vspace{-0.1in} 
-\begin{eqnarray*}
-\frac{d[O_3]}{dt} &=& - \frac{v}{h}[O_3] = - k_1 [O_3]
-\end{eqnarray*}
-
-*** column one
-    :PROPERTIES:
-    :BEAMER_col: 0.65
-    :END:
-
-*** column two
-    :PROPERTIES:
-    :BEAMER_col: 0.35
-    :END:
-#+Attr_LaTeX: :scale 50%
-#+CAPTION: caption
 
 * Photochemistry
 ** Photochemistry <<oxidation>>
@@ -216,16 +196,16 @@ J depends on molecule and flux of photons (hence: time of day, lat, lon, cloud
 cover).  Units of J are s^{-1}
 
 ** Example: NO2
-#+CAPTION: absorption cross-section of NO_2
+#+CAPTION: absorption cross-section of NO_{2}
 [[file:figures/NO2_abs.png]]
-#+CAPTION: absorption cross-section of NO_2
+#+CAPTION: absorption cross-section of NO_{2}
 
 ** Example: NO2
 #+CAPTION: as before showing region of significant UV/VIS solar flux
 [[file:figures/NO2_abs2.png]]
 
-* First example: the NO/NO_2 interconversion by ozone
-** NO_2/NO 'Photostationary state'
+* First example: the NO/NO_{2} interconversion by ozone
+** NO_{2}/NO 'Photostationary state' - our first chemical model
 # see http://www.tandfonline.com/doi/pdf/10.1080/00022470.1983.10465566
 Using the reactions already given, 
 
@@ -354,7 +334,7 @@ in the src folder.
   + What do you expect to happen?
 
 *** \color{red} Any Pythonistas in the audience?
-
+*** \color{red} *Anyone not got the software installed?*
 ** Practical one 
 *** Run the simulation 
 + ~source("kinetics-box-model-pss.R")~
@@ -369,8 +349,8 @@ in the src folder.
 
 ** Recap of the first hour
 *** Begun to think about putting together a chemical mechanism
-*** First model looked at the NO / NO_2 / O_3 interconversion reactions
- #+CAPTION:  'Trees cause more pollution than automobiles do' - Ronald Reagan, 1981
+*** First model looked at the NO / NO_{2} / O_{3} interconversion reactions
+ #+CAPTION:  R output
  #+NAME: dickie_ridge
  [[file:figures/Rplot_pss.png]]
 * Lecture 2
@@ -427,7 +407,7 @@ Primary species coloured in \color{red} red
 \begin{eqnarray*}
 \mathrm{OH} + \mathrm{CO} +\mathrm{O}_2 & \rightarrow &  \mathrm{HO}_2 + \mathrm{CO}_2 
 \end{eqnarray*}
-and HO_2 (a class of 'peroxy') radicals are produced.
+and HO_{2} (a class of 'peroxy') radicals are produced.
 
 *** NO2 is produced *additionally* via reaction of peroxy radicals with NO
 \vspace{-0.15in}
@@ -507,7 +487,7 @@ These are distinct from the ground state oxygen atoms, O, produced by NO2 photol
 \mathrm{O}_2 + \mathrm{O} & \rightarrow & \mathrm{O}_3 
 \end{eqnarray*}
 
-Without the HO_2 the NO reacts with ozone to produce NO2, which recreates the
+Without the HO_{2} the NO reacts with ozone to produce NO2, which recreates the
 ozone.  No net ozone production!!
 * Conclusions
 ** Conclusions
@@ -554,8 +534,15 @@ This is an excellent model but its usage requires good Shell and compiler skills
 
 *** It's easy to show that J values are key to the chemistry
 
-+Consider using a verifiable radiative transfer model such as [[https://www2.acom.ucar.edu/modeling/tropospheric-ultraviolet-and-visible-tuv-radiation-model][TUV]] (Tropospheric Ultraviolet and Visible TUV model)
++ Consider using a verifiable radiative transfer model such as [[https://www2.acom.ucar.edu/modeling/tropospheric-ultraviolet-and-visible-tuv-radiation-model][TUV]] (Tropospheric Ultraviolet and Visible TUV model)
 
+
+* Conclusion
+** This is the end of the 'planned part'
+
+*** Thank you for your attention
+*** Any questions?
+*** Any suggestions?
 
 
 * Useful links
@@ -572,3 +559,42 @@ http://acmg.seas.harvard.edu/education.html#mmac
 # - Item 1
 # - Item 2
 
+* Supplementary material
+** Emissions and deposition
+** Emission of primary pollutants
+*** Emissions into a boundary layer - dimensional analysis
++ Emissions per unit surface area: 
+  + Flux $E$ has units of (molecules) per unit of surface area per unit time (cm^{-2} s^{-1})
++ Into a well-mixed layer of height $h$ (cm)
+*** Rate equation
++ A rate of change of $E/h$
+\vspace{-0.1in} 
+\begin{eqnarray*}
+\frac{d[NO]}{dt} &=& E_{NO}/h
+\end{eqnarray*}
+has the correct dimensions (cm^{-3} s^{-1})
+** Dry deposition at the surface
++ Flux depends on concentration in gas phase above surface and on the
+  reactivity of the surface
++ Flux has units of (molecules) per unit of surface area per unit time (cm^{-2} s^{-1})
+\vspace{-0.1in} 
+\begin{eqnarray*}
+\mathrm{Flux} &\propto& C[O_3]
+\end{eqnarray*}
++ Units of C are therefore cm s^{-1}, a 'velocity', $v$, dependent on surface type
+\vspace{-0.1in} 
+\begin{eqnarray*}
+\frac{d[O_3]}{dt} &=& - \frac{v}{h}[O_3] = - k_1 [O_{3}]
+\end{eqnarray*}
+
+*** column one
+    :PROPERTIES:
+    :BEAMER_col: 0.65
+    :END:
+
+*** column two
+    :PROPERTIES:
+    :BEAMER_col: 0.35
+    :END:
+#+Attr_LaTeX: :scale 50%
+#+CAPTION: caption
